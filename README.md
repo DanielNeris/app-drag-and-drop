@@ -1,50 +1,89 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# File Manager Frontend
 
-Currently, two official plugins are available:
+This is the frontend for the file management system. It allows users to upload, view, and organize files with an intuitive interface.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## **Requirements**
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Node.js (>= 18.x)
+- Yarn or npm
 
-- Configure the top-level `parserOptions` property like this:
+---
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## **Installation**
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-repo/file-manager-frontend.git
+   cd file-manager-frontend
+   ```
+
+2. **Configure environment variables:**
+   Create a `.env` file based on the provided `.env.example`:
+   ```bash
+   cp .env.example .env
+   ```
+   Update the `.env` file with your configuration:
+   ```env
+   VITE_API_URL=http://localhost:3333
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+---
+
+## **Running the Application**
+
+- **Development mode:**
+  ```bash
+  npm run dev
+  ```
+- **Production build:**
+  ```bash
+  npm run build
+  npm run preview
+  ```
+
+---
+
+## **Features**
+
+- **File Uploads:** Drag and drop interface for uploading images and videos.
+- **File Organization:** List and manage uploaded files.
+- **Shareable Links:** Generate and use shareable links for public file access.
+- **Authentication:** User login and registration.
+
+---
+
+## **Folder Structure**
+
+### **Frontend**
+```
+src/
+├── components/       # Reusable UI components
+├── contexts/         # Context providers for state management
+├── hooks/            # Custom hooks
+├── pages/            # Application pages (e.g., Login, Files)
+├── services/         # API interaction logic
+├── styles/           # Global styles
+└── main.tsx          # Application entry point
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+### **Backend**
 ```
+src/
+├── db/               # Database schema and migrations
+├── routes/           # API route handlers
+├── services/         # Business logic
+├── utils/            # Utility functions
+└── server.ts         # Application entry point
+```
+
+---
+
+Now you're ready to run both the API and the frontend! 🎉
