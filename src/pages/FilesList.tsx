@@ -43,6 +43,13 @@ const FilesList = () => {
       setLoadingFileId(fileId)
       const { url } = await getFileDetails(shareableLink)
 
+      setFiles(
+        prevFiles =>
+          prevFiles?.map(file =>
+            file.id === fileId ? { ...file, views: file.views + 1 } : file
+          ) || null
+      )
+
       const fullUrl = `${import.meta.env.VITE_API_URL}${url}`
       window.open(fullUrl, '_blank')
     } catch (error) {
@@ -54,6 +61,7 @@ const FilesList = () => {
       setLoadingFileId(null)
     }
   }
+
   if (isLoading) {
     return <div className="text-center py-8">Loading files...</div>
   }
