@@ -6,6 +6,7 @@ import { createFile } from '@/services/files/create-file'
 
 const DragAndDrop = () => {
   const [file, setFile] = useState<File | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
   const toast = useToast()
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -14,13 +15,10 @@ const DragAndDrop = () => {
       'video/*': ['.mp4', '.mov', '.avi', '.mkv', '.webm'],
     },
     multiple: false,
-    onDrop: async acceptedFiles => {
+    onDrop: acceptedFiles => {
       if (acceptedFiles.length > 0) {
         setFile(acceptedFiles[0])
-
-        await createFile(acceptedFiles[0])
-
-        toast.success({ title: 'File uploaded successfully' })
+        toast.info({ title: 'File added. Click upload to proceed.' })
       }
     },
     onDropRejected: () => {
@@ -29,6 +27,24 @@ const DragAndDrop = () => {
       })
     },
   })
+
+  const uploadFile = async () => {
+    if (!file) {
+      toast.error({ title: 'No file selected' })
+      return
+    }
+
+    try {
+      setIsUploading(true)
+      await createFile(file)
+      toast.success({ title: 'File uploaded successfully' })
+      setFile(null)
+    } catch (error) {
+      toast.error({ title: 'File upload failed. Please try again.' })
+    } finally {
+      setIsUploading(false)
+    }
+  }
 
   const removeFile = () => {
     setFile(null)
@@ -110,6 +126,19 @@ const DragAndDrop = () => {
                 </button>
               </div>
             </div>
+          </div>
+        )}
+
+        {file && (
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={uploadFile}
+              disabled={isUploading}
+              className="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
+            >
+              {isUploading ? 'Uploading...' : 'Upload File'}
+            </button>
           </div>
         )}
       </div>

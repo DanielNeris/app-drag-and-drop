@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useToast } from '@/hooks/use-toast'
 import { loginUser } from '@/services/auth/login'
 import { AuthContext, type User } from '@/hooks/use-auth'
+import { registerUser } from '@/services/auth/register'
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
@@ -54,6 +55,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const register = async (
+    email: string,
+    password: string,
+    confirmPassword: string
+  ) => {
+    try {
+      setIsLoading(true)
+
+      await registerUser({ email, password, confirmPassword })
+
+      toast.success({
+        title: 'Register successful',
+      })
+
+      navigate('/login')
+    } catch (error) {
+      toast.error({
+        title: 'Error',
+        description: error.message,
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
@@ -67,7 +93,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, logout, register, isLoading }}>
       {children}
     </AuthContext.Provider>
   )

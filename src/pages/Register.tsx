@@ -15,28 +15,37 @@ import {
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { LogIn, UserPlus } from 'lucide-react'
+import { UserPlus, LogIn } from 'lucide-react'
 
-const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
-})
+const registerSchema = z
+  .object({
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+    confirmPassword: z
+      .string()
+      .min(6, 'Confirm Password must be at least 6 characters'),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: 'Passwords must match',
+    path: ['confirmPassword'], // Field to display error
+  })
 
-type LoginFormValues = z.infer<typeof loginSchema>
+type RegisterFormValues = z.infer<typeof registerSchema>
 
-const Login = () => {
-  const { login, isLoading } = useAuth()
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+const Register = () => {
+  const { register: registerUser, isLoading } = useAuth()
+  const form = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: '',
       password: '',
+      confirmPassword: '',
     },
   })
   const navigate = useNavigate()
 
-  const onSubmit = async (data: LoginFormValues) => {
-    await login(data.email, data.password)
+  const onSubmit = async (data: RegisterFormValues) => {
+    await registerUser(data.email, data.password, data.confirmPassword)
   }
 
   return (
@@ -44,11 +53,9 @@ const Login = () => {
       <div className="w-full max-w-md px-8 py-10 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl">
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Welcome Back
+            Create Account
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to access your account
-          </p>
+          <p className="mt-2 text-sm text-gray-600">Sign up to get started</p>
         </div>
 
         <Form {...form}>
@@ -90,6 +97,27 @@ const Login = () => {
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-gray-700">
+                    Confirm Password
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="••••••"
+                      className="bg-white/50 border-gray-200 focus:border-indigo-300"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Button
               type="submit"
               disabled={isLoading}
@@ -99,8 +127,8 @@ const Login = () => {
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
               ) : (
                 <>
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Sign In
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Sign Up
                 </>
               )}
             </Button>
@@ -108,14 +136,14 @@ const Login = () => {
         </Form>
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">Don't have an account?</p>
+          <p className="text-sm text-gray-600">Already have an account?</p>
           <Button
-            onClick={() => navigate('/register')}
+            onClick={() => navigate('/login')}
             className="w-full mt-2 bg-gradient-to-r from-gray-600 to-gray-800 hover:from-gray-700 hover:to-gray-900 text-white font-medium py-2.5"
           >
             <>
-              <UserPlus className="w-4 h-4 mr-2" />
-              Register
+              <LogIn className="w-4 h-4 mr-2" />
+              Log In
             </>
           </Button>
         </div>
@@ -124,4 +152,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Register

@@ -2,10 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { PublicRoute } from '@/components/PublicRoute'
-import Login from './pages/Login'
 import { ToastProvider } from './contexts/ToastContext'
 import DragAndDrop from './pages/DragAndDrop'
 import FilesList from './pages/FilesList'
+import Login from './pages/Login'
+import Register from './pages/Register'
 
 const App = () => (
   <>
@@ -18,6 +19,14 @@ const App = () => (
               element={
                 <PublicRoute>
                   <Login />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <PublicRoute>
+                  <Register />
                 </PublicRoute>
               }
             />
